@@ -1,1 +1,5 @@
+[
+  { "name": "BASE",   "file": "models/BASE.glb",   "scale": 0.01 },
+  { "name": "SAIA V", "file": "models/SAIA_V.glb", "scale": 0.01 }
+]
 

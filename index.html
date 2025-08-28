@@ -1,1 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MOOODY – Modelos</title>
+<style>
+  :root{ --ink:#0f172a; --muted:#6b7280; --border:#e5e7eb; --bg:#f8fafc; --card:#fff; }
+  *{ box-sizing:border-box } body{ margin:0; font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif; background:var(--bg); color:var(--ink) }
+  header{ padding:16px; background:#fff; border-bottom:1px solid var(--border) }
+  h1{ margin:0; font-size:18px }
+  .wrap{ padding:16px }
+  .grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap:12px }
+  .card{ background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px; text-decoration:none; color:inherit }
+  .card h3{ margin:0 0 6px; font-size:15px }
+  .card small{ color:var(--muted) }
+  .row{ display:flex; gap:8px; align-items:center; margin-bottom:12px }
+  input[type="text"]{ flex:1; height:36px; border:1px solid var(--border); border-radius:10px; padding:0 10px }
+</style>
+</head>
+<body>
+<header><h1>MOOODY – Catálogo de modelos</h1></header>
+<div class="wrap">
+  <div class="row">
+    <input id="search" type="text" placeholder="Buscar por nome…" />
+  </div>
+  <div id="grid" class="grid"></div>
+</div>
+<script>
+async function loadList(){
+  const resp = await fetch('./models.json', {cache:'no-store'});
+  const data = await resp.json(); // [{name,file,scale}]
+  const grid = document.getElementById('grid');
+  const search = document.getElementById('search');
+  function render(){
+    const q = (search.value||'').toLowerCase();
+    grid.innerHTML = '';
+    data.filter(d => d.name.toLowerCase().includes(q)).forEach(d=>{
+      const a = document.createElement('a');
+      a.className = 'card';
+      a.href = `./viewer.html?model=${encodeURIComponent(d.file)}&scale=${encodeURIComponent(d.scale||0.01)}`;
+      a.innerHTML = `<h3>${d.name}</h3><small>${d.file}</small>`;
+      grid.appendChild(a);
+    });
+  }
+  search.addEventListener('input', render);
+  render();
+}
+loadList().catch(console.error);
+</script>
+</body>
+</html>
 
